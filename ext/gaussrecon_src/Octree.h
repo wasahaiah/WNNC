@@ -97,7 +97,7 @@ private:
 	static bool isovalueComparer(const ReconOctNode* ReconOctNode1, const ReconOctNode* ReconOctNode2);
 public:
 	Octree();
-	bool setTree(const string filename, int depth, int min_depth);
+	bool setTree(const string filename, int depth, int min_depth, int neighbors_area_est);
 	void initLeaf();
 	void GetMCIsoTriangles( const float& isovalue, CoredVectorMeshData* mesh, const int& fullDepthIso, const int& nonLinearFit, bool addBarycenter, bool polygonMesh);
 	static int IsBoundaryEdge(const ReconOctNode* node,const int& dir,const int& x,const int& y,const int& subidivideDepth);

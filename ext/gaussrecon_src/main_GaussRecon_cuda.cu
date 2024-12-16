@@ -232,15 +232,16 @@ int main(int argc, char** argv) {
 	std::string outFileName;
 	int minDepth = 1;
 	int maxDepth = 10;
-
+	int neighbors_area_est = 16;
 	used_dtype width = 0.01f;
     
-    CLI::App app("PGRExportQuery");
+    CLI::App app("GaussRecon_cuda");
     app.add_option("-i", inFileName, "input filename of xyz format")->required();
 	app.add_option("-o", outFileName, "output filename with no suffix")->required();
-	app.add_option("-w", width, "");
-	app.add_option("-m", minDepth, "");
-	app.add_option("-d", maxDepth, "");
+	app.add_option("-a", neighbors_area_est, "number of neighbors for estimating local areas");
+	app.add_option("-w", width, "smoothing width");
+	app.add_option("-m", minDepth, "min depth");
+	app.add_option("-d", maxDepth, "max depth");
 	
     CLI11_PARSE(app, argc, argv);
 
@@ -253,7 +254,7 @@ int main(int argc, char** argv) {
 	}
 		
 	Octree tree;
-	tree.setTree(inFileName, maxDepth, minDepth);//1382_seahorse2_p
+	tree.setTree(inFileName, maxDepth, minDepth, neighbors_area_est);//1382_seahorse2_p
 
 	//*** Nodes for query are from gridDataVector *** START ***
 	unsigned long N_query_pts = tree.gridDataVector.size();
@@ -278,8 +279,11 @@ int main(int argc, char** argv) {
 		ny = tree.samplePoints[j].ny;
 		nz = tree.samplePoints[j].nz;
 		nlen = std::max(std::sqrt(nx * nx + ny * ny + nz * nz), 1e-12f);
-		// area = 4 * tree.samplePoints[j].area;
-		area = 1e-5f;
+		if (neighbors_area_est > 0) {
+			area = tree.samplePoints[j].area;
+		} else {
+			area = 1e-5f;
+		}
 
 		wn_nml_input[3 * j + 0] = ( nx / nlen * area );
 		wn_nml_input[3 * j + 1] = ( ny / nlen * area );

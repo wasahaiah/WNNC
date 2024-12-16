@@ -74,15 +74,18 @@ Octree::Octree() {
 	//myTotalArea = 0;
 }
 
-bool Octree::setTree(const string filename, int d, int d_min) {
+bool Octree::setTree(const string filename, int d, int d_min, int neighbors_area_est) {
 	if (d > DEPTH_LIMIT) {
 		cout << "[In PGROctree] Default depth limit " << DEPTH_LIMIT << " exceeded, resetting d to " << DEPTH_LIMIT << " instead.\n";
 		d = DEPTH_LIMIT;
 	}
 	maxDepth = d;
-	if (!readFile(filename, d_min))
+	if (!readFile(filename, d_min)) {
 		return false;
-	// estimateSampleArea2();
+	}
+	if (neighbors_area_est > 0) {
+		estimateSampleArea2(neighbors_area_est);
+	}
 
 	// root.averageNormalPoint(samplePoints);
 	// vector<float> dist;

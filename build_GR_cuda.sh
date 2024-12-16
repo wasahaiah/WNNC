@@ -16,4 +16,4 @@ nvcc -O3 \
     -Iext/gaussrecon_src/CLI11 -Iext/gaussrecon_src/ANN/include \
     -Lext/gaussrecon_src/ANN/lib \
     -lz -lANN \
-    -o main_GaussReconCUDA 
+    -o main_GaussRecon_cuda 
